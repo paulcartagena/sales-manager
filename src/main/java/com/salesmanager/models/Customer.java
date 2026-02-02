@@ -1,4 +1,4 @@
-package com.fundaments.models;
+package com.salesmanager.models;
 
 public class Customer {
     private int id_customer;

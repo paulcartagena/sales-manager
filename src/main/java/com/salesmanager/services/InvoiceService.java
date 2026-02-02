@@ -1,10 +1,10 @@
-package com.fundaments.services;
+package com.salesmanager.services;
 
-import com.fundaments.dao.CustomerDAO;
-import com.fundaments.dao.InvoiceDAO;
-import com.fundaments.dao.InvoiceDetailDAO;
-import com.fundaments.dao.ProductDAO;
-import com.fundaments.models.*;
+import com.salesmanager.dao.CustomerDAO;
+import com.salesmanager.dao.InvoiceDAO;
+import com.salesmanager.dao.InvoiceDetailDAO;
+import com.salesmanager.dao.ProductDAO;
+import com.salesmanager.models.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

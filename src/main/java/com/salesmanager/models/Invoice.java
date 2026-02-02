@@ -1,6 +1,5 @@
-package com.fundaments.models;
+package com.salesmanager.models;
 
-import javax.swing.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 

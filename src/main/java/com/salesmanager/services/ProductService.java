@@ -1,7 +1,7 @@
-package com.fundaments.services;
+package com.salesmanager.services;
 
-import com.fundaments.dao.ProductDAO;
-import com.fundaments.models.Product;
+import com.salesmanager.dao.ProductDAO;
+import com.salesmanager.models.Product;
 
 public class ProductService {
     private ProductDAO productDAO = new ProductDAO();

@@ -1,4 +1,4 @@
-package com.fundaments.config;
+package com.salesmanager.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

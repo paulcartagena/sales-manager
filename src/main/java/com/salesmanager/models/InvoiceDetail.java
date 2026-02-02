@@ -1,4 +1,4 @@
-package com.fundaments.models;
+package com.salesmanager.models;
 
 import java.math.BigDecimal;
 

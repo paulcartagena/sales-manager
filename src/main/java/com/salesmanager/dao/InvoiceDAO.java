@@ -1,7 +1,7 @@
-package com.fundaments.dao;
+package com.salesmanager.dao;
 
-import com.fundaments.config.ConnectionDB;
-import com.fundaments.models.Invoice;
+import com.salesmanager.config.ConnectionDB;
+import com.salesmanager.models.Invoice;
 
 import java.sql.*;
 import java.util.ArrayList;
