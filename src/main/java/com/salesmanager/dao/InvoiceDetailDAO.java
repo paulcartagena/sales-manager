@@ -20,19 +20,11 @@ public class InvoiceDetailDAO {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                InvoiceDetail detail = new InvoiceDetail();
-                detail.setId_detail(rs.getInt("id_detail"));
-                detail.setInvoice_id(rs.getInt("invoice_id"));
-                detail.setProduct_id(rs.getInt("product_id"));
-                detail.setQuantity(rs.getInt("quantity"));
-                detail.setUnit_price(rs.getBigDecimal("unit_price"));
-                detail.setSubtotal(rs.getBigDecimal("subtotal"));
-
-                invoiceDetails.add(detail);
+                invoiceDetails.add(mapResultSet(rs));
             }
 
         } catch (SQLException e) {
-            System.out.println("Error al encontrar la lista de detalle de la factura: " + e.getMessage());
+            throw new RuntimeException("Error fetching details by invoice id");
         }
         return invoiceDetails;
     }
@@ -51,16 +43,29 @@ public class InvoiceDetailDAO {
 
             int rowsAffected = pstmt.executeUpdate();
 
-            if (rowsAffected > 0) {
-                ResultSet rs = pstmt.getGeneratedKeys();
-                if (rs.next()) {
-                    detail.setId_detail(rs.getInt(1));
-                }
-                return detail;
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Insert failed, no rows affected");
             }
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                detail.setId_detail(rs.getInt(1));
+            }
+
+            return detail;
         } catch (SQLException e) {
-            System.err.println("Error al insertar la factura: " + e.getMessage());
+            throw new RuntimeException("Error inserting invoice details");
         }
-        return null;
+    }
+
+    public InvoiceDetail mapResultSet(ResultSet rs) throws SQLException {
+        InvoiceDetail detail = new InvoiceDetail();
+        detail.setId_detail(rs.getInt("id_detail"));
+        detail.setInvoice_id(rs.getInt("invoice_id"));
+        detail.setProduct_id(rs.getInt("product_id"));
+        detail.setQuantity(rs.getInt("quantity"));
+        detail.setUnit_price(rs.getBigDecimal("unit_price"));
+        detail.setSubtotal(rs.getBigDecimal("subtotal"));
+        return detail;
     }
 }
