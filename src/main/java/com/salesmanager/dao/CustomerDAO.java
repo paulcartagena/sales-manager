@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerDAO {
-    //  READ
+
+    // READ
     public List<Customer> findAll() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT * FROM customers ORDER BY id_customer";
@@ -18,16 +19,10 @@ public class CustomerDAO {
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                Customer customer = new Customer();
-                customer.setId_customer(rs.getInt("id_customer"));
-                customer.setName(rs.getString("name"));
-                customer.setEmail(rs.getString("email"));
-                customer.setPhone(rs.getString("phone"));
-
-                customers.add(customer);
+                customers.add(mapResultSet(rs));
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener clientes: " + e.getMessage());
+            throw new RuntimeException("Error fetching customers", e);
         }
         return customers;
     }
@@ -43,14 +38,10 @@ public class CustomerDAO {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                customer = new Customer();
-                customer.setId_customer(rs.getInt("id_customer"));
-                customer.setName(rs.getString("name"));
-                customer.setEmail(rs.getString("email"));
-                customer.setPhone(rs.getString("phone"));
+                customer = mapResultSet(rs);
             }
         } catch (SQLException e) {
-            System.err.println("Error al encontrar el cliente por id: " + e.getMessage());
+            throw new RuntimeException("Error fetching customer by id", e);
         }
         return customer;
     }
@@ -68,17 +59,19 @@ public class CustomerDAO {
 
             int rowsAffected = pstmt.executeUpdate();
 
-            if (rowsAffected > 0) {
-                ResultSet rs = pstmt.getGeneratedKeys();
-                if (rs.next()) {
-                    customer.setId_customer(rs.getInt(1));
-                }
-                return customer;
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Insert failed, no rows affected");
             }
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                customer.setId_customer(rs.getInt(1));
+            }
+
+            return customer;
         } catch (SQLException e) {
-            System.err.println("Error al insertar el cliente: " + e.getMessage());
+            throw new RuntimeException("Error inserting customer", e);
         }
-        return null;
     }
 
     // UPDATE
@@ -95,17 +88,17 @@ public class CustomerDAO {
 
             int rowsAffected = pstmt.executeUpdate();
 
-            if (rowsAffected > 0) {
-                return customer;
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Update failed, no rows affected");
             }
         } catch (SQLException e) {
-            System.err.println("Error al actualizar el cliente: " + e.getMessage());
+            throw new RuntimeException("Error updating customer", e);
         }
-        return null;
+        return customer;
     }
 
     // DELETE
-    public boolean delete(int id) {
+    public void delete(int id) {
         String sql = "DELETE FROM customers WHERE id_customer = ?";
 
         try (Connection conn = ConnectionDB.getConnection();
@@ -113,10 +106,21 @@ public class CustomerDAO {
 
             pstmt.setInt(1, id);
             int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
+
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Delete failed, no rows affected");
+            }
         } catch (SQLException e) {
-            System.err.println("Error al eliminar el cliente: " + e.getMessage());
+           throw new RuntimeException("Error deleting customer", e);
         }
-        return false;
+    }
+
+    private Customer mapResultSet(ResultSet rs) throws SQLException {
+        Customer customer = new Customer();
+        customer.setId_customer(rs.getInt("id_customer"));
+        customer.setName(rs.getString("name"));
+        customer.setEmail(rs.getString("email"));
+        customer.setPhone(rs.getString("phone"));
+        return customer;
     }
 }
