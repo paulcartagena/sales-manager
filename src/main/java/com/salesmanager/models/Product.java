@@ -18,6 +18,13 @@ public class Product {
         this.stock = stock;
     }
 
+    public Product(String name, BigDecimal price, int stock){
+        this.id_product = id_product;
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+    }
+
     public int getId_product() {
         return id_product;
     }

@@ -8,6 +8,7 @@ import com.salesmanager.models.*;
 import com.salesmanager.services.InvoiceService;
 import com.salesmanager.services.ProductService;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -74,9 +75,10 @@ public class Main {
 
         while (!back) {
             System.out.println("\nPRODUCTS MENU");
-            System.out.println("1. List all products");
-            System.out.println("2. Search product");
-            System.out.println("3. Restock product");
+            System.out.println("1. Register new product");
+            System.out.println("2. List all products");
+            System.out.println("3. Search product");
+            System.out.println("4. Restock product");
             System.out.println("0. <-- Back to main menu");
             System.out.println("Select a option: ");
 
@@ -85,12 +87,15 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    listProducts();
+                    insertProduct();
                     break;
                 case 2:
-                    searchProduct();
+                    listProducts();
                     break;
                 case 3:
+                    searchProduct();
+                    break;
+                case 4:
                     restockProduct();
                     break;
                 case 0:
@@ -184,9 +189,7 @@ public class Main {
 
         while (!back) {
             System.out.println("\nREPORTS MENU");
-            System.out.println("1. Products with low stock");
-            System.out.println("2. Products with high stock");
-            System.out.println("3. Search invoice details");
+            System.out.println("1. Search invoice details");
             System.out.println("0. <-- Back to main menu");
             System.out.println("Select a option: ");
 
@@ -195,12 +198,6 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    productsLowStock();
-                    break;
-                case 2:
-                    productsHighStock();
-                    break;
-                case 3:
                     searchInvoiceDetails();
                     break;
                 case 0:
@@ -218,6 +215,23 @@ public class Main {
     }
 
     // PRODUCTS
+    public static void insertProduct() {
+        System.out.println("\nINSERT CUSTOMER");
+        try {
+            System.out.println("Name:");
+            String name = scanner.nextLine();
+            System.out.println("Price:");
+            BigDecimal price = scanner.nextBigDecimal();
+            System.out.println("Stock:");
+            int stock = scanner.nextInt();
+
+            Product product = new Product(name, price, stock);
+            Product inserted = productDAO.insert(product);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
     public static void listProducts() {
         System.out.println("\nALL PRODUCTS");
         try {
@@ -384,56 +398,6 @@ public class Main {
     }
 
     // REPORTS
-    public static void productsLowStock() {
-        System.out.println("\nPRODUCTS LOW STOCK");
-        try {
-            System.out.println("Min stock: ");
-            int minStock = scanner.nextInt();
-
-            List<Product> products  = productDAO.findLowStock(minStock);
-            if (products.isEmpty()) {
-                System.out.println("No products with low stock");
-            }
-
-            System.out.println("Products found");
-            scanner.nextLine();
-
-            for (Product p: products) {
-                System.out.println(
-                        "Name: " + p.getName() + ", Stock: " + p.getStock()
-                );
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-    public static void productsHighStock() {
-        System.out.println("\nPRODUCTS HIGH STOCK");
-        try {
-            System.out.println("High stock: ");
-            int highStock = scanner.nextInt();
-
-            List<Product> products  = productDAO.findHighStock(highStock);
-            if (products.isEmpty()) {
-                System.out.println("No products with high stock");
-            }
-
-            System.out.println("Products found");
-            scanner.nextLine();
-
-            for (Product p: products) {
-                System.out.println(
-                        "Name: " + p.getName() + ", Stock: " + p.getStock()
-                );
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
     public static void searchInvoiceDetails() {
         System.out.println("\nSEARCH INVOICE DETAILS");
         try {
