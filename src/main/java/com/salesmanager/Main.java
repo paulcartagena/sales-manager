@@ -3,7 +3,6 @@ package com.salesmanager;
 import com.salesmanager.dao.CustomerDAO;
 import com.salesmanager.dao.InvoiceDAO;
 import com.salesmanager.dao.InvoiceDetailDAO;
-import com.salesmanager.dao.ProductDAO;
 import com.salesmanager.models.*;
 import com.salesmanager.services.InvoiceService;
 import com.salesmanager.services.ProductService;
@@ -15,8 +14,7 @@ import java.util.Scanner;
 
 public class Main {
     private static ProductService productService = new ProductService();
-    private static InvoiceService invoiceService = new InvoiceService();
-    private static ProductDAO productDAO = new ProductDAO();
+    private static InvoiceService invoiceService = new InvoiceService();;
     private static CustomerDAO customerDAO = new CustomerDAO();
     private static InvoiceDAO invoiceDAO = new InvoiceDAO();
     private static InvoiceDetailDAO invoiceDetailDAO = new InvoiceDetailDAO();
@@ -75,7 +73,7 @@ public class Main {
 
         while (!back) {
             System.out.println("\nPRODUCTS MENU");
-            System.out.println("1. Register new product");
+            System.out.println("1. Create product");
             System.out.println("2. List all products");
             System.out.println("3. Search product");
             System.out.println("4. Restock product");
@@ -87,13 +85,13 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    insertProduct();
+                    createProduct();
                     break;
                 case 2:
-                    listProducts();
+                    getAllProducts();
                     break;
                 case 3:
-                    searchProduct();
+                    getProductById();
                     break;
                 case 4:
                     restockProduct();
@@ -117,9 +115,11 @@ public class Main {
 
         while (!back) {
             System.out.println("\nCUSTOMER MENU");
-            System.out.println("1. List all customers");
-            System.out.println("2. Search customer");
-            System.out.println("3. Register new customer");
+            System.out.println("1. Register new customer");
+            System.out.println("2. List all customers");
+            System.out.println("3. Search customer");
+            System.out.println("4. Update customer");
+            System.out.println("5. Delete customer");
             System.out.println("0. <-- Back to main menu");
             System.out.println("Select a option: ");
 
@@ -128,13 +128,19 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    listCustomers();
+                    insertCustomer();
                     break;
                 case 2:
-                    searchCustomer();
+                    listCustomers();
                     break;
                 case 3:
-                    registerCustomer();
+                    searchCustomer();
+                    break;
+                case 4:
+                    updateCustomer();
+                    break;
+                case 5:
+                    deleteCustomer();
                     break;
                 case 0:
                     back = true;
@@ -215,8 +221,8 @@ public class Main {
     }
 
     // PRODUCTS
-    public static void insertProduct() {
-        System.out.println("\nINSERT CUSTOMER");
+    public static void createProduct() {
+        System.out.println("\nCREATE PRODUCT");
         try {
             System.out.println("Name:");
             String name = scanner.nextLine();
@@ -226,16 +232,19 @@ public class Main {
             int stock = scanner.nextInt();
 
             Product product = new Product(name, price, stock);
-            Product inserted = productDAO.insert(product);
+            Product inserted = productService.createProduct(product);
+
+            System.out.println("Product created successfully");
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
-    public static void listProducts() {
+    public static void getAllProducts() {
         System.out.println("\nALL PRODUCTS");
         try {
-            List<Product> products = productDAO.findAll();
+            List<Product> products = productService.getAllProducts();
 
             if (products.isEmpty()) {
                 System.out.println("No products found");
@@ -250,13 +259,13 @@ public class Main {
         }
     }
 
-    public static void searchProduct() {
-        System.out.println("\nSEARCH PRODUCT");
+    public static void getProductById() {
+        System.out.println("\nSEARCH PRODUCT BY ID");
         try {
-            System.out.println("Name");
-            String name = scanner.nextLine();
+            System.out.println("ID:");
+            int id = scanner.nextInt();
 
-            Product product = productDAO.findByName(name);
+            Product product = productService.getProductById(id);
 
             System.out.println("Product found");
             System.out.println("Id: " + product.getId_product());
@@ -290,6 +299,23 @@ public class Main {
     }
 
     // CUSTOMERS
+    public static void insertCustomer() {
+        System.out.println("\nINSERT CUSTOMER");
+        try {
+            System.out.println("Name:");
+            String name = scanner.nextLine();
+            System.out.println("Email:");
+            String email = scanner.nextLine();
+            System.out.println("Phone");
+            String phone = scanner.nextLine();
+
+            Customer customer = new Customer(name, email, phone);
+            Customer inserted = customerDAO.insert(customer);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
     public static void listCustomers() {
         System.out.println("\nALL CUSTOMERS");
         try {
@@ -325,18 +351,33 @@ public class Main {
         }
     }
 
-    public static void registerCustomer() {
-        System.out.println("\nINSERT CUSTOMER");
+    public static void updateCustomer() {
+        System.out.println("\nUPDATE CUSTOMER");
         try {
-            System.out.println("Name:");
+            System.out.println("ID:");
+            int id = scanner.nextInt();
+            System.out.println("New name:");
             String name = scanner.nextLine();
-            System.out.println("Email:");
+            System.out.println("New email:");
             String email = scanner.nextLine();
-            System.out.println("Phone");
+            System.out.println("New phone:");
             String phone = scanner.nextLine();
 
-            Customer customer = new Customer(name, email, phone);
-            Customer inserted = customerDAO.insert(customer);
+            Customer customer = new Customer(id, name, email, phone);
+            Customer updated = customerDAO.update(customer);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public static void deleteCustomer() {
+        System.out.println("\nDELETE CUSTOMER");
+        try {
+            System.out.println("ID:");
+            int id = scanner.nextInt();
+
+            customerDAO.delete(id);
+            System.out.println("Deleted successful");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -419,7 +460,7 @@ public class Main {
             System.out.println("\nProducts:");
 
             for (InvoiceDetail d : details) {
-                Product p = productDAO.findById(d.getProduct_id());
+                Product p = productService.getProductById(d.getProduct_id());
                 System.out.println(" - " + p.getName() +
                         " x " + d.getQuantity() +
                         " @ " + d.getUnit_price() +

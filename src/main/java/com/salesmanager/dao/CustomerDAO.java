@@ -110,6 +110,7 @@ public class CustomerDAO {
             if (rowsAffected == 0) {
                 throw new RuntimeException("Delete failed, no rows affected");
             }
+
         } catch (SQLException e) {
            throw new RuntimeException("Error deleting customer", e);
         }
