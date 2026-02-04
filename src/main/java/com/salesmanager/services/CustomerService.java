@@ -24,6 +24,7 @@ public class CustomerService {
         if (customer == null) {
             throw new IllegalArgumentException("Customer not found with id: " + id);
         }
+
         return customer;
     }
 
@@ -93,7 +94,6 @@ public class CustomerService {
         }
 
         customerDAO.delete(id);
-
     }
 
 
