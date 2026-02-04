@@ -19,7 +19,6 @@ public class Product {
     }
 
     public Product(String name, BigDecimal price, int stock){
-        this.id_product = id_product;
         this.name = name;
         this.price = price;
         this.stock = stock;

@@ -9,7 +9,6 @@ import java.util.List;
 
 public class ProductDAO {
 
-    // READ
     public List<Product> findAll() {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM products ORDER BY id_product";
@@ -21,6 +20,7 @@ public class ProductDAO {
             while (rs.next()) {
                 products.add(mapResultSet(rs));
             }
+
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching all products", e);
         }
@@ -40,32 +40,13 @@ public class ProductDAO {
             if (rs.next()) {
                 product = mapResultSet(rs);
             }
+
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching product by id", e);
         }
         return product;
     }
 
-    public Product findByName(String name) {
-        Product product = null;
-        String sql = "SELECT * FROM products WHERE name = ?";
-
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, name);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                product = mapResultSet(rs);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching product by name", e);
-        }
-        return product;
-    }
-
-    // INSERT
     public Product insert(Product product) {
         String sql = "INSERT INTO products (name, price, stock) VALUES (?, ?, ?)";
 
@@ -93,7 +74,6 @@ public class ProductDAO {
         }
     }
 
-    // UPDATE
     public Product update(Product product) {
         String sql = "UPDATE products SET name = ?, price = ?, stock = ? WHERE id_product = ?";
 
@@ -114,6 +94,24 @@ public class ProductDAO {
             throw new RuntimeException("Error updating product", e);
         }
         return product;
+    }
+
+    public void delete(int id) {
+        String sql = "DELETE FROM products WHERE id_product = ?";
+
+        try (Connection conn = ConnectionDB.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Delete failed, no rows affected");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error deleting product", e);
+        }
     }
 
     private Product mapResultSet(ResultSet rs) throws SQLException {
