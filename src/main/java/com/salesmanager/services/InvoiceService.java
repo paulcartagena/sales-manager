@@ -12,14 +12,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InvoiceService {
-
     private static final BigDecimal TAX_RATE = new BigDecimal("0.13");
 
-    private InvoiceDAO invoiceDAO = new InvoiceDAO();
-    private CustomerDAO customerDAO = new CustomerDAO();
-    private ProductDAO productDAO = new ProductDAO();
-    private InvoiceDetailDAO invoiceDetailDAO = new InvoiceDetailDAO();
+    private final InvoiceDAO invoiceDAO = new InvoiceDAO();
+    private final CustomerDAO customerDAO = new CustomerDAO();
+    private final ProductDAO productDAO = new ProductDAO();
+    private final InvoiceDetailDAO invoiceDetailDAO = new InvoiceDetailDAO();
 
+    // READ
+    public List<Invoice> getAllInvoices() {
+        return invoiceDAO.findAll();
+    }
+
+    public Invoice getInvoiceById(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Invalid invoice");
+        }
+
+        Invoice invoice = invoiceDAO.findById(id);
+
+        if (invoice == null) {
+            throw new IllegalArgumentException("Invoice not found with id: " + id);
+        }
+
+        return invoice;
+    }
+
+    public List<InvoiceDetail> getDtByInvoiceId(int invoiceId) {
+        if (invoiceId <= 0) {
+            throw new IllegalArgumentException("Invalid invoice");
+        }
+
+        List<InvoiceDetail> details = invoiceDetailDAO.findByInvoiceId(invoiceId);
+
+        if (details == null || details.isEmpty()) {
+            throw new IllegalArgumentException("Details not found with id: " + invoiceId);
+        }
+
+        return details;
+    }
+
+    // BUSINESS
     public Invoice createSale(int customerId, List<SaleItem> items) {
         // 1, Validate customer
         Customer customer = customerDAO.findById(customerId);

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InvoiceDAO {
-    // READ
+
     public List<Invoice> findAll() {
         List<Invoice> invoices = new ArrayList<>();
         String sql = "SELECT * FROM invoices ORDER BY id_invoice";
@@ -47,7 +47,6 @@ public class InvoiceDAO {
         return invoice;
     }
 
-    //INSERT
     public Invoice insert(Invoice invoice) {
         String sql = "INSERT INTO invoices (customer_id, invoice_date, subtotal, tax, total) VALUES (?, ?, ?, ?, ?)";
 

@@ -1,7 +1,5 @@
 package com.salesmanager;
 
-import com.salesmanager.dao.InvoiceDAO;
-import com.salesmanager.dao.InvoiceDetailDAO;
 import com.salesmanager.models.*;
 import com.salesmanager.services.CustomerService;
 import com.salesmanager.services.InvoiceService;
@@ -16,8 +14,6 @@ public class Main {
     private static ProductService productService = new ProductService();
     private static InvoiceService invoiceService = new InvoiceService();;
     private static CustomerService customerService = new CustomerService();
-    private static InvoiceDAO invoiceDAO = new InvoiceDAO();
-    private static InvoiceDetailDAO invoiceDetailDAO = new InvoiceDetailDAO();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -174,7 +170,7 @@ public class Main {
                     createSale();
                     break;
                 case 2:
-                    listInvoices();
+                    getAllInvoices();
                     break;
                 case 0:
                     back = true;
@@ -204,7 +200,7 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    searchInvoiceDetails();
+                    getDtByInvoiceId();
                     break;
                 case 0:
                     back = true;
@@ -427,10 +423,10 @@ public class Main {
         }
     }
 
-    public static void listInvoices() {
+    public static void getAllInvoices() {
         System.out.println("\nALL INVOICES");
         try {
-            List<Invoice> invoices = invoiceDAO.findAll();
+            List<Invoice> invoices = invoiceService.getAllInvoices();
 
             if (invoices.isEmpty()) {
                 System.out.println("Invoices not found");
@@ -445,20 +441,20 @@ public class Main {
     }
 
     // REPORTS
-    public static void searchInvoiceDetails() {
+    public static void getDtByInvoiceId() {
         System.out.println("\nSEARCH INVOICE DETAILS");
         try {
             System.out.println("Invoice id: ");
             int invoiceId = scanner.nextInt();
             scanner.nextLine();
 
-            Invoice invoice = invoiceDAO.findById(invoiceId);
+            Invoice invoice = invoiceService.getInvoiceById(invoiceId);
             if (invoice == null) {
                 System.out.println("Invoice not found");
                 return;
             }
 
-            List<InvoiceDetail> details = invoiceDetailDAO.findByInvoiceId(invoiceId);
+            List<InvoiceDetail> details = invoiceService.getDtByInvoiceId(invoiceId);
 
             System.out.println("\nInvoice #" + invoice.getId_invoice());
             System.out.println("Date: " + invoice.getInvoice_date());
@@ -475,8 +471,8 @@ public class Main {
                 );
             }
 
-            System.out.println("\nSubtotal: S" + invoice.getSubtotal());
-            System.out.println("Tax: S" + invoice.getTax());
+            System.out.println("\nSubtotal: $" + invoice.getSubtotal());
+            System.out.println("Tax: $" + invoice.getTax());
             System.out.println("Total: $" + invoice.getTotal());
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InvoiceDetailDAO {
-    // READ
+
     public List<InvoiceDetail> findByInvoiceId(int invoiceId) {
         List<InvoiceDetail> invoiceDetails = new ArrayList<>();
         String sql = "SELECT * FROM invoice_details WHERE invoice_id = ?";
