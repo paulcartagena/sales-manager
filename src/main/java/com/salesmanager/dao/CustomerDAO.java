@@ -9,7 +9,6 @@ import java.util.List;
 
 public class CustomerDAO {
 
-    // READ
     public List<Customer> findAll() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT * FROM customers ORDER BY id_customer";
@@ -46,7 +45,6 @@ public class CustomerDAO {
         return customer;
     }
 
-    // INSERT
     public Customer insert(Customer customer) {
         String sql = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?)";
 
@@ -74,7 +72,6 @@ public class CustomerDAO {
         }
     }
 
-    // UPDATE
     public Customer update(Customer customer) {
         String sql = "UPDATE customers SET name = ?, email = ?, phone = ? WHERE id_customer = ?";
 
@@ -97,7 +94,6 @@ public class CustomerDAO {
         return customer;
     }
 
-    // DELETE
     public void delete(int id) {
         String sql = "DELETE FROM customers WHERE id_customer = ?";
 

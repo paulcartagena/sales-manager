@@ -1,9 +1,9 @@
 package com.salesmanager;
 
-import com.salesmanager.dao.CustomerDAO;
 import com.salesmanager.dao.InvoiceDAO;
 import com.salesmanager.dao.InvoiceDetailDAO;
 import com.salesmanager.models.*;
+import com.salesmanager.services.CustomerService;
 import com.salesmanager.services.InvoiceService;
 import com.salesmanager.services.ProductService;
 
@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class Main {
     private static ProductService productService = new ProductService();
     private static InvoiceService invoiceService = new InvoiceService();;
-    private static CustomerDAO customerDAO = new CustomerDAO();
+    private static CustomerService customerService = new CustomerService();
     private static InvoiceDAO invoiceDAO = new InvoiceDAO();
     private static InvoiceDetailDAO invoiceDetailDAO = new InvoiceDetailDAO();
     private static Scanner scanner = new Scanner(System.in);
@@ -128,13 +128,13 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    insertCustomer();
+                    createCustomer();
                     break;
                 case 2:
-                    listCustomers();
+                    getAllCustomers();
                     break;
                 case 3:
-                    searchCustomer();
+                    getCustomerById();
                     break;
                 case 4:
                     updateCustomer();
@@ -299,8 +299,8 @@ public class Main {
     }
 
     // CUSTOMERS
-    public static void insertCustomer() {
-        System.out.println("\nINSERT CUSTOMER");
+    public static void createCustomer() {
+        System.out.println("\nCREATE CUSTOMER");
         try {
             System.out.println("Name:");
             String name = scanner.nextLine();
@@ -310,16 +310,18 @@ public class Main {
             String phone = scanner.nextLine();
 
             Customer customer = new Customer(name, email, phone);
-            Customer inserted = customerDAO.insert(customer);
+            Customer inserted = customerService.createCustomer(customer);
+
+            System.out.println("Customer created successfully");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
-    public static void listCustomers() {
+    public static void getAllCustomers() {
         System.out.println("\nALL CUSTOMERS");
         try {
-            List<Customer> customers = customerDAO.findAll();
+            List<Customer> customers = customerService.getAllCustomers();
 
             if (customers.isEmpty()) {
                 System.out.println("No customers found");
@@ -333,15 +335,15 @@ public class Main {
         }
     }
 
-    public static void searchCustomer() {
-        System.out.println("\nSEARCH CUSTOMER");
+    public static void getCustomerById() {
+        System.out.println("\nSEARCH CUSTOMER BY ID");
         try {
-            System.out.println("Id: ");
+            System.out.println("ID:");
             int id = scanner.nextInt();
 
-            Customer customer = customerDAO.findById(id);
+            Customer customer = customerService.getCustomerById(id);
 
-            System.out.println("Product found");
+            System.out.println("Customer found");
             System.out.println("Id: " + customer.getId_customer());
             System.out.println("Name: " + customer.getName());
             System.out.println("Email: " + customer.getEmail());
@@ -356,6 +358,7 @@ public class Main {
         try {
             System.out.println("ID:");
             int id = scanner.nextInt();
+            scanner.nextLine();
             System.out.println("New name:");
             String name = scanner.nextLine();
             System.out.println("New email:");
@@ -364,7 +367,9 @@ public class Main {
             String phone = scanner.nextLine();
 
             Customer customer = new Customer(id, name, email, phone);
-            Customer updated = customerDAO.update(customer);
+            Customer updated = customerService.updateCustomer(customer);
+
+            System.out.println("Customer updated successfully");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -376,8 +381,9 @@ public class Main {
             System.out.println("ID:");
             int id = scanner.nextInt();
 
-            customerDAO.delete(id);
-            System.out.println("Deleted successful");
+            customerService.deleteCustomer(id);
+
+            System.out.println("Customer deleted successful");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
