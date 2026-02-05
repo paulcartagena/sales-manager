@@ -57,7 +57,7 @@ public class InvoiceService {
         // 1, Validate customer
         Customer customer = customerDAO.findById(customerId);
         if (customer == null) {
-            throw new RuntimeException("Customer not found");
+            throw new IllegalArgumentException("Customer not found");
         }
 
         // 2. Validate products and calculate total
@@ -67,10 +67,10 @@ public class InvoiceService {
         for (SaleItem item : items) {
             Product product = productDAO.findById(item.getProduct_id());
             if (product == null) {
-                throw new RuntimeException("Product not found: " + item.getProduct_id());
+                throw new IllegalArgumentException("Product not found: " + item.getProduct_id());
             }
             if (product.getStock() < item.getQuantity()) {
-                throw new RuntimeException("Insufficient stock: " + item.getProduct_id());
+                throw new IllegalArgumentException("Insufficient stock: " + item.getProduct_id());
             }
 
             BigDecimal itemSubtotal =
@@ -127,10 +127,6 @@ public class InvoiceService {
                 throw new RuntimeException("Error updating product");
             }
         }
-
-        System.out.println("Invoice #" + savedInvoice.getId_invoice());
-        System.out.println("Items:  " + items.size());
-        System.out.println("Total: " + total);
 
         return savedInvoice;
     }

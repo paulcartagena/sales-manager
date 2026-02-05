@@ -417,7 +417,9 @@ public class Main {
             }
 
             Invoice invoice = invoiceService.createSale(customerId, items);
-            System.out.println("\nInvoice created: #" + invoice.getId_invoice());
+            System.out.println("Invoice #" + invoice.getId_invoice());
+            System.out.println("Items:  " + items.size());
+            System.out.println("Total: " + invoice.getTotal());
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
