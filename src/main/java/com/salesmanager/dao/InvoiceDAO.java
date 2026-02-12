@@ -53,27 +53,38 @@ public class InvoiceDAO {
         try (Connection conn = ConnectionDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            pstmt.setInt(1, invoice.getCustomer_id());
-            pstmt.setTimestamp(2, Timestamp.valueOf(invoice.getInvoice_date()));
-            pstmt.setBigDecimal(3, invoice.getSubtotal());
-            pstmt.setBigDecimal(4, invoice.getTax());
-            pstmt.setBigDecimal(5, invoice.getTotal());
-
-            int rowsAffected = pstmt.executeUpdate();
-
-            if (rowsAffected == 0) {
-                throw new RuntimeException("Insert failed, no rows affected");
-            }
-
-            ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()) {
-                invoice.setId_invoice(rs.getInt(1));
-            }
-
-            return invoice;
+            return executeInsert(pstmt, invoice);
         } catch (SQLException e) {
             throw new RuntimeException("Error inserting invoice", e);
         }
+    }
+
+    // Transaction overload when creating a sale
+    public Invoice insert(Invoice invoice, Connection conn) throws SQLException {
+        String sql = "INSERT INTO invoices (customer_id, invoice_date, subtotal, tax, total) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+        return executeInsert(pstmt, invoice);
+    }
+
+    private Invoice executeInsert(PreparedStatement pstmt, Invoice invoice) throws SQLException {
+        pstmt.setInt(1, invoice.getCustomer_id());
+        pstmt.setTimestamp(2, Timestamp.valueOf(invoice.getInvoice_date()));
+        pstmt.setBigDecimal(3, invoice.getSubtotal());
+        pstmt.setBigDecimal(4, invoice.getTax());
+        pstmt.setBigDecimal(5, invoice.getTotal());
+
+        int rowsAffected = pstmt.executeUpdate();
+        if (rowsAffected == 0) {
+            throw new RuntimeException("Insert failed, no rows affected");
+        }
+
+        ResultSet rs = pstmt.getGeneratedKeys();
+        if (rs.next()) {
+            invoice.setId_invoice(rs.getInt(1));
+        }
+
+        return invoice;
     }
 
     public Invoice mapResultSet(ResultSet rs) throws SQLException {

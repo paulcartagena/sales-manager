@@ -80,19 +80,31 @@ public class ProductDAO {
         try (Connection conn = ConnectionDB.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, product.getName());
-            pstmt.setBigDecimal(2, product.getPrice());
-            pstmt.setInt(3, product.getStock());
-            pstmt.setInt(4, product.getId_product());
-
-            int rowsAffected = pstmt.executeUpdate();
-
-            if (rowsAffected == 0) {
-                throw new RuntimeException("Update failed, no rows affected");
-            }
+            return executeUpdate(pstmt, product);
         } catch (SQLException e) {
             throw new RuntimeException("Error updating product", e);
         }
+    }
+
+    // Transaction overload when creating a sale
+    public Product update(Product product, Connection conn) throws SQLException {
+        String sql = "UPDATE products SET name = ?, price = ?, stock = ? WHERE id_product = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        return executeUpdate(pstmt, product);
+    }
+
+    private Product executeUpdate(PreparedStatement pstmt, Product product) throws SQLException {
+        pstmt.setString(1, product.getName());
+        pstmt.setBigDecimal(2, product.getPrice());
+        pstmt.setInt(3, product.getStock());
+        pstmt.setInt(4, product.getId_product());
+
+        int rowsAffected = pstmt.executeUpdate();
+        if (rowsAffected == 0) {
+            throw new RuntimeException("Update failed, no rows affected");
+        }
+
         return product;
     }
 
