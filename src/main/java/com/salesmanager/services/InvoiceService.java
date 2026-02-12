@@ -1,5 +1,6 @@
 package com.salesmanager.services;
 
+import com.salesmanager.config.ConnectionDB;
 import com.salesmanager.dao.CustomerDAO;
 import com.salesmanager.dao.InvoiceDAO;
 import com.salesmanager.dao.InvoiceDetailDAO;
@@ -7,6 +8,8 @@ import com.salesmanager.dao.ProductDAO;
 import com.salesmanager.models.*;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,52 +85,81 @@ public class InvoiceService {
         BigDecimal tax = subtotal.multiply(TAX_RATE);
         BigDecimal total = subtotal.add(tax);
 
-        // 3. Save invoice
-        Invoice invoice = new Invoice();
-        invoice.setCustomer_id(customerId);
-        invoice.setInvoice_date(LocalDateTime.now());
-        invoice.setSubtotal(subtotal);
-        invoice.setTax(tax);
-        invoice.setTotal(total);
+        // 3. Sale transaction
+        Connection conn = null;
+        try {
+            conn = ConnectionDB.getConnection();
+            conn.setAutoCommit(false);
 
-        Invoice savedInvoice = invoiceDAO.insert(invoice);
-        if (savedInvoice == null) {
-            throw new RuntimeException("Error saving invoice");
+            // 3.1 Save invoice
+            Invoice invoice = new Invoice();
+            invoice.setCustomer_id(customerId);
+            invoice.setInvoice_date(LocalDateTime.now());
+            invoice.setSubtotal(subtotal);
+            invoice.setTax(tax);
+            invoice.setTotal(total);
+
+            Invoice savedInvoice = invoiceDAO.insert(invoice);
+
+            // 3.2 Save invoice details
+            for (int i = 0; i < items.size(); i++) {
+                SaleItem item = items.get(i);
+                Product product = products.get(i);
+
+                BigDecimal itemSubtotal =
+                        product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+
+                InvoiceDetail detail = new InvoiceDetail();
+                detail.setInvoice_id(savedInvoice.getId_invoice());
+                detail.setProduct_id(item.getProduct_id());
+                detail.setQuantity(item.getQuantity());
+                detail.setUnit_price(product.getPrice());
+                detail.setSubtotal(itemSubtotal);
+
+                invoiceDetailDAO.insert(detail, conn);
+            }
+
+            // 3.3 Update stock
+            for (int i = 0; i < items.size(); i++) {
+                SaleItem item = items.get(i);
+                Product product = products.get(i);
+
+                product.setStock(product.getStock() - item.getQuantity());
+
+                productDAO.update(product);
+            }
+
+            conn.commit();
+            return savedInvoice;
+        } catch (IllegalArgumentException e) {
+            rollback(conn);
+            throw e;
+        } catch (SQLException e) {
+            rollback(conn);
+            throw new RuntimeException();
+        } finally {
+            closeConnection(conn);
         }
+    }
 
-        // 4. Save invoice details
-        for (int i = 0; i < items.size(); i++) {
-            SaleItem item = items.get(i);
-            Product product = products.get(i);
-
-            BigDecimal itemSubtotal =
-                    product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-
-            InvoiceDetail detail = new InvoiceDetail();
-            detail.setInvoice_id(savedInvoice.getId_invoice());
-            detail.setProduct_id(item.getProduct_id());
-            detail.setQuantity(item.getQuantity());
-            detail.setUnit_price(product.getPrice());
-            detail.setSubtotal(itemSubtotal);
-
-            InvoiceDetail savedDetail = invoiceDetailDAO.insert(detail);
-            if (savedDetail == null) {
-                throw new RuntimeException("Error saving detail");
+    private void rollback(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException("Error during rollback", ex);
             }
         }
+    }
 
-        // 5. Update stock
-        for (int i = 0; i < items.size(); i++) {
-            SaleItem item = items.get(i);
-            Product product = products.get(i);
-
-            product.setStock(product.getStock() - item.getQuantity());
-            Product updatedProduct = productDAO.update(product);
-            if (updatedProduct == null) {
-                throw new RuntimeException("Error updating product");
+    private void closeConnection(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.setAutoCommit(true);
+                conn.close();
+            } catch (SQLException ex) {
+                throw new RuntimeException("Error closing connection", ex);
             }
         }
-
-        return savedInvoice;
     }
 }
