@@ -5,6 +5,7 @@ import com.salesmanager.dao.CustomerDAO;
 import com.salesmanager.dao.InvoiceDAO;
 import com.salesmanager.dao.InvoiceDetailDAO;
 import com.salesmanager.dao.ProductDAO;
+import com.salesmanager.exceptions.*;
 import com.salesmanager.models.*;
 
 import java.math.BigDecimal;
@@ -29,13 +30,13 @@ public class InvoiceService {
 
     public Invoice getInvoiceById(int id) {
         if (id <= 0) {
-            throw new IllegalArgumentException("Invalid invoice");
+            throw new InvalidIdException("invoice");
         }
 
         Invoice invoice = invoiceDAO.findById(id);
 
         if (invoice == null) {
-            throw new IllegalArgumentException("Invoice not found with id: " + id);
+            throw new InvoiceNotFoundException(id);
         }
 
         return invoice;
@@ -43,13 +44,13 @@ public class InvoiceService {
 
     public List<InvoiceDetail> getDtByInvoiceId(int invoiceId) {
         if (invoiceId <= 0) {
-            throw new IllegalArgumentException("Invalid invoice");
+            throw new InvalidIdException("invoice");
         }
 
         List<InvoiceDetail> details = invoiceDetailDAO.findByInvoiceId(invoiceId);
 
         if (details == null || details.isEmpty()) {
-            throw new IllegalArgumentException("Details not found with id: " + invoiceId);
+            throw new InvoiceNotFoundException(invoiceId);
         }
 
         return details;
@@ -59,8 +60,9 @@ public class InvoiceService {
     public Invoice createSale(int customerId, List<SaleItem> items) {
         // 1, Validate customer
         Customer customer = customerDAO.findById(customerId);
+
         if (customer == null) {
-            throw new IllegalArgumentException("Customer not found");
+            throw new CustomerNotFoundException(customerId);
         }
 
         // 2. Validate products and calculate total
@@ -69,11 +71,12 @@ public class InvoiceService {
 
         for (SaleItem item : items) {
             Product product = productDAO.findById(item.getProduct_id());
+
             if (product == null) {
-                throw new IllegalArgumentException("Product not found: " + item.getProduct_id());
+                throw new ProductNotFoundException(item.getProduct_id());
             }
             if (product.getStock() < item.getQuantity()) {
-                throw new IllegalArgumentException("Insufficient stock: " + item.getProduct_id());
+                throw new InsufficientStockException(item.getProduct_id());
             }
 
             BigDecimal itemSubtotal =
@@ -131,7 +134,7 @@ public class InvoiceService {
 
             conn.commit();
             return savedInvoice;
-        } catch (IllegalArgumentException e) {
+        } catch (RuntimeException e) {
             rollback(conn);
             throw e;
         } catch (SQLException e) {

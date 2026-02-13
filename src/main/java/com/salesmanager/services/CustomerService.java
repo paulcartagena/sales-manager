@@ -1,8 +1,9 @@
 package com.salesmanager.services;
 
 import com.salesmanager.dao.CustomerDAO;
+import com.salesmanager.exceptions.CustomerNotFoundException;
+import com.salesmanager.exceptions.InvalidIdException;
 import com.salesmanager.models.Customer;
-import com.salesmanager.models.Product;
 
 import java.util.List;
 
@@ -16,13 +17,13 @@ public class CustomerService {
 
     public Customer getCustomerById(int id) {
         if (id <= 0) {
-            throw new IllegalArgumentException("Invalid customer");
+            throw new InvalidIdException("customer");
         }
 
         Customer customer = customerDAO.findById(id);
 
         if (customer == null) {
-            throw new IllegalArgumentException("Customer not found with id: " + id);
+            throw new CustomerNotFoundException(id);
         }
 
         return customer;
@@ -57,7 +58,7 @@ public class CustomerService {
             throw new IllegalArgumentException("Customer is required");
         }
         if (customer.getId_customer() <= 0) {
-            throw new IllegalArgumentException("Customer id is required");
+            throw new InvalidIdException("customer");
         }
         if (customer.getName() == null || customer.getName().isBlank()) {
             throw new IllegalArgumentException("Customer name is required");
@@ -70,8 +71,9 @@ public class CustomerService {
         }
 
         Customer existing = customerDAO.findById(customer.getId_customer());
+
         if (existing == null) {
-            throw new IllegalArgumentException("Customer not found");
+            throw new CustomerNotFoundException(customer.getId_customer());
         }
 
         // Business rules
@@ -85,16 +87,15 @@ public class CustomerService {
     // DELETE
     public void deleteCustomer(int id) {
         if (id <= 0) {
-            throw new IllegalArgumentException("Invalid customer id");
+            throw new InvalidIdException("customer");
         }
 
         Customer existing = customerDAO.findById(id);
+
         if (existing == null) {
-            throw new IllegalArgumentException("Customer not found");
+            throw new CustomerNotFoundException(id);
         }
 
         customerDAO.delete(id);
     }
-
-
 }

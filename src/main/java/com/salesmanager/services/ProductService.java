@@ -1,9 +1,10 @@
 package com.salesmanager.services;
 
 import com.salesmanager.dao.ProductDAO;
+import com.salesmanager.exceptions.InvalidIdException;
+import com.salesmanager.exceptions.ProductNotFoundException;
 import com.salesmanager.models.Product;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class ProductService {
@@ -16,14 +17,15 @@ public class ProductService {
 
     public Product getProductById(int id) {
         if (id <= 0) {
-            throw new IllegalArgumentException("Invalid product id");
+            throw new InvalidIdException("product");
         }
 
         Product product = productDAO.findById(id);
 
         if (product == null) {
-            throw new RuntimeException("Product not found with id: " + id);
+            throw new ProductNotFoundException(id);
         }
+
         return product;
     }
 
@@ -33,15 +35,19 @@ public class ProductService {
         Product product = productDAO.findById(productId);
 
         // 2. Validate
+        if (product == null) {
+            throw new ProductNotFoundException(productId);
+        }
+
         if (quantityToAdd <= 0 || quantityToAdd > 100) {
-            throw new RuntimeException("Error: Quantity must be between 1 and 100");
+            throw new IllegalArgumentException("Quantity must be between 1 and 100");
         }
 
         // 3. Business logic
         int newStock = product.getStock() + quantityToAdd;
 
         if (newStock > 200) {
-            System.out.println("Warning: Stock exceeds 200 units");
+            throw new IllegalArgumentException("Stock would exceed maximum allowed (200 units)");
         }
 
         product.setStock(newStock);
@@ -57,7 +63,7 @@ public class ProductService {
             throw new IllegalArgumentException("Product name is required");
         }
         if (product.getPrice() == null || product.getPrice().signum() <= 0) {
-            throw new IllegalArgumentException("Stock cannot be negative");
+            throw new IllegalArgumentException("Price must be greater than 0");
         }
         if (product.getStock() < 0) {
             throw new IllegalArgumentException("Stock cannot be negative");
@@ -69,7 +75,13 @@ public class ProductService {
     // DELETE
     public void deleteProduct(int id) {
         if (id <= 0) {
-            throw new IllegalArgumentException("Invalid product id");
+            throw new InvalidIdException("product");
+        }
+
+        Product product = productDAO.findById(id);
+
+        if (product == null) {
+            throw new ProductNotFoundException(id);
         }
 
         productDAO.delete(id);
