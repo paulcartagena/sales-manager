@@ -99,7 +99,7 @@ public class InvoiceService {
             invoice.setTax(tax);
             invoice.setTotal(total);
 
-            Invoice savedInvoice = invoiceDAO.insert(invoice);
+            Invoice savedInvoice = invoiceDAO.insert(invoice, conn);
 
             // 3.2 Save invoice details
             for (int i = 0; i < items.size(); i++) {
@@ -126,7 +126,7 @@ public class InvoiceService {
 
                 product.setStock(product.getStock() - item.getQuantity());
 
-                productDAO.update(product);
+                productDAO.update(product, conn);
             }
 
             conn.commit();
@@ -136,7 +136,7 @@ public class InvoiceService {
             throw e;
         } catch (SQLException e) {
             rollback(conn);
-            throw new RuntimeException();
+            throw new RuntimeException("Database error during sale creation", e);
         } finally {
             closeConnection(conn);
         }
