@@ -68,8 +68,8 @@ public class InvoiceDAO {
     }
 
     private Invoice executeInsert(PreparedStatement pstmt, Invoice invoice) throws SQLException {
-        pstmt.setInt(1, invoice.getCustomer_id());
-        pstmt.setTimestamp(2, Timestamp.valueOf(invoice.getInvoice_date()));
+        pstmt.setInt(1, invoice.getCustomerId());
+        pstmt.setTimestamp(2, Timestamp.valueOf(invoice.getInvoiceDate()));
         pstmt.setBigDecimal(3, invoice.getSubtotal());
         pstmt.setBigDecimal(4, invoice.getTax());
         pstmt.setBigDecimal(5, invoice.getTotal());
@@ -81,7 +81,7 @@ public class InvoiceDAO {
 
         ResultSet rs = pstmt.getGeneratedKeys();
         if (rs.next()) {
-            invoice.setId_invoice(rs.getInt(1));
+            invoice.setInvoiceId(rs.getInt(1));
         }
 
         return invoice;
@@ -89,9 +89,9 @@ public class InvoiceDAO {
 
     public Invoice mapResultSet(ResultSet rs) throws SQLException {
         Invoice invoice = new Invoice();
-        invoice.setId_invoice(rs.getInt("id_invoice"));
-        invoice.setCustomer_id(rs.getInt("customer_id"));
-        invoice.setInvoice_date(rs.getTimestamp("invoice_date").toLocalDateTime());
+        invoice.setInvoiceId(rs.getInt("id_invoice"));
+        invoice.setCustomerId(rs.getInt("customer_id"));
+        invoice.setInvoiceDate(rs.getTimestamp("invoice_date").toLocalDateTime());
         invoice.setSubtotal(rs.getBigDecimal("subtotal"));
         invoice.setTax(rs.getBigDecimal("tax"));
         invoice.setTotal(rs.getBigDecimal("total"));

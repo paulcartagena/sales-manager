@@ -63,7 +63,7 @@ public class CustomerDAO {
 
             ResultSet rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
-                customer.setId_customer(rs.getInt(1));
+                customer.setCustomerId(rs.getInt(1));
             }
 
             return customer;
@@ -81,7 +81,7 @@ public class CustomerDAO {
             pstmt.setString(1, customer.getName());
             pstmt.setString(2, customer.getEmail());
             pstmt.setString(3, customer.getPhone());
-            pstmt.setInt(4, customer.getId_customer());
+            pstmt.setInt(4, customer.getCustomerId());
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -114,7 +114,7 @@ public class CustomerDAO {
 
     private Customer mapResultSet(ResultSet rs) throws SQLException {
         Customer customer = new Customer();
-        customer.setId_customer(rs.getInt("id_customer"));
+        customer.setCustomerId(rs.getInt("id_customer"));
         customer.setName(rs.getString("name"));
         customer.setEmail(rs.getString("email"));
         customer.setPhone(rs.getString("phone"));

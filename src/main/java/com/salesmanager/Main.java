@@ -264,7 +264,7 @@ public class Main {
             Product product = productService.getProductById(id);
 
             System.out.println("Product found");
-            System.out.println("Id: " + product.getId_product());
+            System.out.println("Id: " + product.getProductId());
             System.out.println("Name: " + product.getName());
             System.out.println("Price: " + product.getPrice());
             System.out.println("Stock: " + product.getStock());
@@ -340,7 +340,7 @@ public class Main {
             Customer customer = customerService.getCustomerById(id);
 
             System.out.println("Customer found");
-            System.out.println("Id: " + customer.getId_customer());
+            System.out.println("Id: " + customer.getCustomerId());
             System.out.println("Name: " + customer.getName());
             System.out.println("Email: " + customer.getEmail());
             System.out.println("Phone: " + customer.getPhone());
@@ -417,7 +417,7 @@ public class Main {
             }
 
             Invoice invoice = invoiceService.createSale(customerId, items);
-            System.out.println("Invoice #" + invoice.getId_invoice());
+            System.out.println("Invoice #" + invoice.getInvoiceId());
             System.out.println("Items:  " + items.size());
             System.out.println("Total: " + invoice.getTotal());
         } catch (Exception e) {
@@ -458,16 +458,16 @@ public class Main {
 
             List<InvoiceDetail> details = invoiceService.getDtByInvoiceId(invoiceId);
 
-            System.out.println("\nInvoice #" + invoice.getId_invoice());
-            System.out.println("Date: " + invoice.getInvoice_date());
-            System.out.println("Customer ID: " + invoice.getCustomer_id());
+            System.out.println("\nInvoice #" + invoice.getInvoiceId());
+            System.out.println("Date: " + invoice.getInvoiceDate());
+            System.out.println("Customer ID: " + invoice.getCustomerId());
             System.out.println("\nProducts:");
 
             for (InvoiceDetail d : details) {
-                Product p = productService.getProductById(d.getProduct_id());
+                Product p = productService.getProductById(d.getProductId());
                 System.out.println(" - " + p.getName() +
                         " x " + d.getQuantity() +
-                        " @ " + d.getUnit_price() +
+                        " @ " + d.getUnitPrice() +
                         " = $" + d.getSubtotal()
 
                 );

@@ -1,20 +1,20 @@
 package com.salesmanager.models;
 
 public class SaleItem {
-    private int product_id;
+    private int productId;
     private int quantity;
 
-    public SaleItem(int product_id, int quantity) {
-        this.product_id = product_id;
+    public SaleItem(int productId, int quantity) {
+        this.productId = productId;
         this.quantity = quantity;
     }
 
-    public int getProduct_id() {
-        return product_id;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public int getQuantity() {

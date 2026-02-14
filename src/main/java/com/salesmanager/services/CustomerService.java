@@ -57,7 +57,7 @@ public class CustomerService {
         if (customer == null) {
             throw new IllegalArgumentException("Customer is required");
         }
-        if (customer.getId_customer() <= 0) {
+        if (customer.getCustomerId() <= 0) {
             throw new InvalidIdException("customer");
         }
         if (customer.getName() == null || customer.getName().isBlank()) {
@@ -70,10 +70,10 @@ public class CustomerService {
             throw new IllegalArgumentException("Customer phone is required");
         }
 
-        Customer existing = customerDAO.findById(customer.getId_customer());
+        Customer existing = customerDAO.findById(customer.getCustomerId());
 
         if (existing == null) {
-            throw new CustomerNotFoundException(customer.getId_customer());
+            throw new CustomerNotFoundException(customer.getCustomerId());
         }
 
         // Business rules

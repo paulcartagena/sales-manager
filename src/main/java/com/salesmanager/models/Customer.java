@@ -1,7 +1,7 @@
 package com.salesmanager.models;
 
 public class Customer {
-    private int id_customer;
+    private int customerId;
     private String name;
     private String email;
     private String phone;
@@ -9,8 +9,8 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(int id_customer, String name, String email, String phone) {
-        this.id_customer = id_customer;
+    public Customer(int customerId, String name, String email, String phone) {
+        this.customerId = customerId;
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -22,12 +22,12 @@ public class Customer {
         this.phone = phone;
     }
 
-    public int getId_customer() {
-        return id_customer;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setId_customer(int id_customer) {
-        this.id_customer = id_customer;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public String getName() {
@@ -56,7 +56,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer: " + id_customer +
+        return "Customer: " + customerId +
                 ", Name: " + name +
                 ", Email: " + email +
                 ", Phone: " + phone;

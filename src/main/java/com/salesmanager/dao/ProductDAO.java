@@ -65,7 +65,7 @@ public class ProductDAO {
 
             ResultSet rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
-                product.setId_product(rs.getInt(1));
+                product.setProductId(rs.getInt(1));
             }
 
             return product;
@@ -98,7 +98,7 @@ public class ProductDAO {
         pstmt.setString(1, product.getName());
         pstmt.setBigDecimal(2, product.getPrice());
         pstmt.setInt(3, product.getStock());
-        pstmt.setInt(4, product.getId_product());
+        pstmt.setInt(4, product.getProductId());
 
         int rowsAffected = pstmt.executeUpdate();
         if (rowsAffected == 0) {
@@ -128,7 +128,7 @@ public class ProductDAO {
 
     private Product mapResultSet(ResultSet rs) throws SQLException {
         Product product = new Product();
-        product.setId_product(rs.getInt("id_product"));
+        product.setProductId(rs.getInt("id_product"));
         product.setName(rs.getString("name"));
         product.setPrice(rs.getBigDecimal("price"));
         product.setStock(rs.getInt("stock"));

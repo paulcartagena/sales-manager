@@ -3,47 +3,47 @@ package com.salesmanager.models;
 import java.math.BigDecimal;
 
 public class InvoiceDetail {
-    private int id_detail;
-    private int invoice_id;
-    private int product_id;
+    private int detailId;
+    private int invoiceId;
+    private int productId;
     private int quantity;
-    private BigDecimal unit_price;
+    private BigDecimal unitPrice;
     private BigDecimal subtotal;
 
     public InvoiceDetail () {
     }
 
-    public InvoiceDetail (int id_detail, int invoice_id, int product_id, int quantity, BigDecimal unit_price, BigDecimal subtotal) {
-        this.id_detail = id_detail;
-        this.invoice_id = invoice_id;
-        this.product_id = product_id;
+    public InvoiceDetail (int detailId, int invoiceId, int productId, int quantity, BigDecimal unitPrice, BigDecimal subtotal) {
+        this.detailId = detailId;
+        this.invoiceId = invoiceId;
+        this.productId = productId;
         this.quantity = quantity;
-        this.unit_price = unit_price;
+        this.unitPrice = unitPrice;
         this.subtotal = subtotal;
     }
 
-    public int getId_detail() {
-        return id_detail;
+    public int getDetailId() {
+        return detailId;
     }
 
-    public void setId_detail(int id_detail) {
-        this.id_detail = id_detail;
+    public void setDetailId(int detailId) {
+        this.detailId = detailId;
     }
 
-    public int getInvoice_id() {
-        return invoice_id;
+    public int getInvoiceId() {
+        return invoiceId;
     }
 
-    public void setInvoice_id(int invoice_id) {
-        this.invoice_id = invoice_id;
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
-    public int getProduct_id() {
-        return product_id;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public int getQuantity() {
@@ -54,12 +54,12 @@ public class InvoiceDetail {
         this.quantity = quantity;
     }
 
-    public BigDecimal getUnit_price() {
-        return unit_price;
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setUnit_price(BigDecimal unit_price) {
-        this.unit_price = unit_price;
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public BigDecimal getSubtotal() {
@@ -72,11 +72,11 @@ public class InvoiceDetail {
 
     @Override
     public String toString() {
-        return "Detail: " + id_detail +
-                ", Invoice: " + invoice_id +
-                ", Product: " + product_id +
+        return "Detail: " + detailId +
+                ", Invoice: " + invoiceId +
+                ", Product: " + productId +
                 ", Quantity: " + quantity +
-                ". UnitPrice: " + unit_price +
+                ". UnitPrice: " + unitPrice +
                 ", Subtotal: " + subtotal;
     }
 }

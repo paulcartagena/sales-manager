@@ -3,7 +3,7 @@ package com.salesmanager.models;
 import java.math.BigDecimal;
 
 public class Product {
-    private int id_product;
+    private int productId;
     private String name;
     private BigDecimal price;
     private int stock;
@@ -11,8 +11,8 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id_product, String name, BigDecimal price, int stock){
-        this.id_product = id_product;
+    public Product(int productId, String name, BigDecimal price, int stock){
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.stock = stock;
@@ -24,12 +24,12 @@ public class Product {
         this.stock = stock;
     }
 
-    public int getId_product() {
-        return id_product;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setId_product(int id_product) {
-        this.id_product = id_product;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public String getName() {
@@ -67,7 +67,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product: " + id_product +
+        return "Product: " + productId +
                 ", Name: " + name +
                 ", Price: $" + price +
                 ", Stock: " + stock;

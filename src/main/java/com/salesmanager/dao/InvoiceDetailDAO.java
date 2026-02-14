@@ -50,10 +50,10 @@ public class InvoiceDetailDAO {
     }
 
     private InvoiceDetail executeInsert(PreparedStatement pstmt, InvoiceDetail detail) throws SQLException {
-        pstmt.setInt(1, detail.getInvoice_id());
-        pstmt.setInt(2, detail.getProduct_id());
+        pstmt.setInt(1, detail.getInvoiceId());
+        pstmt.setInt(2, detail.getProductId());
         pstmt.setInt(3, detail.getQuantity());
-        pstmt.setBigDecimal(4, detail.getUnit_price());
+        pstmt.setBigDecimal(4, detail.getUnitPrice());
         pstmt.setBigDecimal(5, detail.getSubtotal());
 
         int rowsAffected = pstmt.executeUpdate();
@@ -63,7 +63,7 @@ public class InvoiceDetailDAO {
 
         ResultSet rs = pstmt.getGeneratedKeys();
         if (rs.next()) {
-            detail.setId_detail(rs.getInt(1));
+            detail.setDetailId(rs.getInt(1));
         }
 
         return detail;
@@ -71,11 +71,11 @@ public class InvoiceDetailDAO {
 
     public InvoiceDetail mapResultSet(ResultSet rs) throws SQLException {
         InvoiceDetail detail = new InvoiceDetail();
-        detail.setId_detail(rs.getInt("id_detail"));
-        detail.setInvoice_id(rs.getInt("invoice_id"));
-        detail.setProduct_id(rs.getInt("product_id"));
+        detail.setDetailId(rs.getInt("id_detail"));
+        detail.setInvoiceId(rs.getInt("invoice_id"));
+        detail.setProductId(rs.getInt("product_id"));
         detail.setQuantity(rs.getInt("quantity"));
-        detail.setUnit_price(rs.getBigDecimal("unit_price"));
+        detail.setUnitPrice(rs.getBigDecimal("unit_price"));
         detail.setSubtotal(rs.getBigDecimal("subtotal"));
         return detail;
     }

@@ -70,13 +70,13 @@ public class InvoiceService {
         BigDecimal subtotal = BigDecimal.ZERO;
 
         for (SaleItem item : items) {
-            Product product = productDAO.findById(item.getProduct_id());
+            Product product = productDAO.findById(item.getProductId());
 
             if (product == null) {
-                throw new ProductNotFoundException(item.getProduct_id());
+                throw new ProductNotFoundException(item.getProductId());
             }
             if (product.getStock() < item.getQuantity()) {
-                throw new InsufficientStockException(item.getProduct_id());
+                throw new InsufficientStockException(item.getProductId());
             }
 
             BigDecimal itemSubtotal =
@@ -96,8 +96,8 @@ public class InvoiceService {
 
             // 3.1 Save invoice
             Invoice invoice = new Invoice();
-            invoice.setCustomer_id(customerId);
-            invoice.setInvoice_date(LocalDateTime.now());
+            invoice.setCustomerId(customerId);
+            invoice.setInvoiceDate(LocalDateTime.now());
             invoice.setSubtotal(subtotal);
             invoice.setTax(tax);
             invoice.setTotal(total);
@@ -113,10 +113,10 @@ public class InvoiceService {
                         product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
 
                 InvoiceDetail detail = new InvoiceDetail();
-                detail.setInvoice_id(savedInvoice.getId_invoice());
-                detail.setProduct_id(item.getProduct_id());
+                detail.setInvoiceId(savedInvoice.getInvoiceId());
+                detail.setProductId(item.getProductId());
                 detail.setQuantity(item.getQuantity());
-                detail.setUnit_price(product.getPrice());
+                detail.setUnitPrice(product.getPrice());
                 detail.setSubtotal(itemSubtotal);
 
                 invoiceDetailDAO.insert(detail, conn);

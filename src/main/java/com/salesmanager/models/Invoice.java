@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Invoice {
-    private int id_invoice;
-    private int customer_id;
-    private LocalDateTime invoice_date;
+    private int invoiceId;
+    private int customerId;
+    private LocalDateTime invoiceDate;
     private BigDecimal subtotal;
     private BigDecimal tax;
     private BigDecimal total;
@@ -14,37 +14,37 @@ public class Invoice {
     public Invoice () {
     }
 
-    public Invoice(int id_invoice, int customer_id, LocalDateTime invoice_date, BigDecimal subtotal, BigDecimal tax, BigDecimal total) {
-        this.id_invoice = id_invoice;
-        this.customer_id = customer_id;
-        this.invoice_date = invoice_date;
+    public Invoice(int invoiceId, int customerId, LocalDateTime invoiceDate, BigDecimal subtotal, BigDecimal tax, BigDecimal total) {
+        this.invoiceId = invoiceId;
+        this.customerId = customerId;
+        this.invoiceDate = invoiceDate;
         this.subtotal = subtotal;
         this.tax = tax;
         this.total = total;
     }
 
-    public int getId_invoice() {
-        return id_invoice;
+    public int getInvoiceId() {
+        return invoiceId;
     }
 
-    public void setId_invoice(int id_invoice) {
-        this.id_invoice = id_invoice;
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
-    public int getCustomer_id() {
-        return customer_id;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer_id(int customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
-    public LocalDateTime getInvoice_date() {
-        return invoice_date;
+    public LocalDateTime getInvoiceDate() {
+        return invoiceDate;
     }
 
-    public void setInvoice_date(LocalDateTime invoice_date) {
-        this.invoice_date = invoice_date;
+    public void setInvoiceDate(LocalDateTime invoiceDate) {
+        this.invoiceDate = invoiceDate;
     }
 
     public BigDecimal getSubtotal() {
@@ -73,9 +73,9 @@ public class Invoice {
 
     @Override
     public String toString() {
-        return "Id: " + id_invoice +
-                ", Customer: " + customer_id +
-                ", Date: " + invoice_date +
+        return "Id: " + invoiceId +
+                ", Customer: " + customerId +
+                ", Date: " + invoiceDate +
                 ", Subtotal: " + subtotal +
                 ", Tax: " + tax +
                 ", Total: " + total;
