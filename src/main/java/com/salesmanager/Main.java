@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class Main {
     private static ProductService productService = new ProductService();
-    private static InvoiceService invoiceService = new InvoiceService();;
+    private static InvoiceService invoiceService = new InvoiceService();
     private static CustomerService customerService = new CustomerService();
     private static Scanner scanner = new Scanner(System.in);
 
@@ -232,10 +232,9 @@ public class Main {
             int stock = scanner.nextInt();
 
             Product product = new Product(name, price, stock);
-            Product inserted = productService.createProduct(product);
+            productService.createProduct(product);
 
             System.out.println("Product created successfully");
-
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -253,7 +252,6 @@ public class Main {
                     System.out.println(p);
                 }
             }
-
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -289,7 +287,6 @@ public class Main {
 
             productService.restockProduct(id, quantity);
             System.out.println("Restock successful");
-
         } catch (RuntimeException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
@@ -324,7 +321,7 @@ public class Main {
             String phone = scanner.nextLine();
 
             Customer customer = new Customer(name, email, phone);
-            Customer inserted = customerService.createCustomer(customer);
+            customerService.createCustomer(customer);
 
             System.out.println("Customer created successfully");
         } catch (Exception e) {
@@ -381,7 +378,7 @@ public class Main {
             String phone = scanner.nextLine();
 
             Customer customer = new Customer(id, name, email, phone);
-            Customer updated = customerService.updateCustomer(customer);
+            customerService.updateCustomer(customer);
 
             System.out.println("Customer updated successfully");
         } catch (Exception e) {
@@ -469,11 +466,6 @@ public class Main {
             scanner.nextLine();
 
             Invoice invoice = invoiceService.getInvoiceById(invoiceId);
-            if (invoice == null) {
-                System.out.println("Invoice not found");
-                return;
-            }
-
             List<InvoiceDetail> details = invoiceService.getDtByInvoiceId(invoiceId);
 
             System.out.println("\nInvoice #" + invoice.getInvoiceId());
