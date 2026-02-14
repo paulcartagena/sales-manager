@@ -25,4 +25,11 @@ customers, and inventory using a layered architecture and PostgreSQL.
 - `services/` - Business logic
 - `exceptions/` - Custom exceptions
 
-
+## Setup
+1. Create a PostgreSQL database
+2. Run `schema.sql` to create the tables
+3. Configure the following environment variables:
+    - `DB_URL` → jdbc:postgresql://localhost:5432/your_database
+    - `DB_USER` → your PostgreSQL username
+    - `DB_PASSWORD` → your PostgreSQL password
+4. Run the application
