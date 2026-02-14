@@ -73,6 +73,7 @@ public class Main {
             System.out.println("2. List all products");
             System.out.println("3. Search product");
             System.out.println("4. Restock product");
+            System.out.println("5. Delete product");
             System.out.println("0. <-- Back to main menu");
             System.out.println("Select a option: ");
 
@@ -91,6 +92,9 @@ public class Main {
                     break;
                 case 4:
                     restockProduct();
+                    break;
+                case 5:
+                    deleteProduct();
                     break;
                 case 0:
                     back = true;
@@ -291,6 +295,20 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Invalid input");
             scanner.nextLine();
+        }
+    }
+
+    public static void deleteProduct() {
+        System.out.println("\nDELETE PRODUCT");
+        try {
+            System.out.println("ID:");
+            int id = scanner.nextInt();
+
+            productService.deleteProduct(id);
+
+            System.out.println("Product deleted successful");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
